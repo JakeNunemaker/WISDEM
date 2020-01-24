@@ -108,3 +108,11 @@ Thumbs.db
 *.png
 *.pdf
 *.docx
+
+# Temporary testing output #
+############################
+*.map.sum
+
+# Ignore JetBrains IDE files #
+##############################
+.idea/
