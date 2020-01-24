@@ -522,7 +522,7 @@ class ReferenceBlade(object):
     def remap_profiles(self, blade, AFref, spline=PchipInterpolator):
 
         # Option to correct trailing edge for closed to flatback transition
-        trailing_edge_correction = True
+        trailing_edge_correction = False
 
         # Get airfoil thicknesses in decending order and cooresponding airfoil names
         AFref_thk = [AFref[af]['relative_thickness'] for af in blade['outer_shape_bem']['airfoil_position']['labels']]
