@@ -4,6 +4,7 @@ from .DummyComponent import DummyComponent
 from .ManagementCostComponent import ManagementCostComponent
 from .ErectionCostComponent import ErectionCostComopnent
 from .FoundationCostComponent import FoundationCostComponent
+from .CollectionCostComponent import CollectionCostComponent
 
 class LandBOSSEGroup(om.Group):
     def initialize(self):
@@ -105,6 +106,7 @@ class LandBOSSEGroup(om.Group):
         indeps.add_discrete_output('equip', val=None, desc='Collections of equipment to perform erection operations.')
         indeps.add_discrete_output('equip_price', val=None, desc='Prices for various type of equipment.')
         indeps.add_discrete_output('rsmeans', val=None, desc='RSMeans price data')
+        indeps.add_discrete_output('cable_specs', val=None, desc='cable specs for collection system')
 
         indeps.add_discrete_output(
             'allow_same_flag',
@@ -130,9 +132,10 @@ class LandBOSSEGroup(om.Group):
             val=None
         )
 
-        self.add_subsystem('management_cost', ManagementCostComponent(), promotes=['*'])
-        self.add_subsystem('erection_cost', ErectionCostComopnent(), promotes=['*'])
-        self.add_subsystem('foundation_cost', FoundationCostComponent(), promotes=['*'])
+        # self.add_subsystem('management_cost', ManagementCostComponent(), promotes=['*'])
+        # self.add_subsystem('erection_cost', ErectionCostComopnent(), promotes=['*'])
+        # self.add_subsystem('foundation_cost', FoundationCostComponent(), promotes=['*'])
+        self.add_subsystem('collection_cost', CollectionCostComponent(), promotes=['*'])
 
 # Calculate this input instead
 # self.add_input('project_size_megawatts', units='MW', desc='(Number of turbines) * (Turbine rating MW)', value=)

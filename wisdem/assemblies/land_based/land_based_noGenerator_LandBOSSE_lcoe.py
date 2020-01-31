@@ -350,6 +350,12 @@ def Init_LandBasedAssembly(prob, blade, Nsection_Tow, Analysis_Level=0, fst_vt={
     )
     prob['rsmeans'] = rsmeans_df
 
+    cable_specs_df = DataframeCache.read_xlsx_sheet(
+        'foundation_validation_ge15',
+        'cable_specs'
+    )
+    prob['cable_specs'] = cable_specs_df
+
     prob['project_value_usd'] = 5e7
     prob['foundation_cost_usd'] = 1e7
 
