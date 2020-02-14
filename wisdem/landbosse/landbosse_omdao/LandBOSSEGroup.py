@@ -18,6 +18,8 @@ class LandBOSSEGroup(om.Group):
 
         # Numeric inputs
         indeps = self.add_subsystem('indeps', om.IndepVarComp(), promotes=['*'])
+
+        indeps.add_output('project_value_usd', val=1, units='USD', desc='Project value in USD')
         indeps.add_output('construct_duration', val=9, desc='Total project construction time (months)')
         indeps.add_output('hub_height_meters', val=80, units='m', desc='Hub height m')
         indeps.add_output('rotor_diameter_m', val=77, units='m', desc='Rotor diameter m')
@@ -25,6 +27,7 @@ class LandBOSSEGroup(om.Group):
         indeps.add_output('turbine_rating_MW', val=1.5, units='MW', desc='Turbine rating MW')
         indeps.add_output('num_turbines', val=100, desc='Number of turbines in project')
         indeps.add_output('fuel_cost_usd_per_gal', val=1.0, desc='Fuel cost USD/gal')
+        indeps.add_output('foundation_cost_usd', val=1, units='USD', desc='Foundation cost, USD')
 
         indeps.add_output('breakpoint_between_base_and_topping_percent',
                           val=70,
@@ -134,7 +137,7 @@ class LandBOSSEGroup(om.Group):
 
         # self.add_subsystem('management_cost', ManagementCostComponent(), promotes=['*'])
         # self.add_subsystem('erection_cost', ErectionCostComopnent(), promotes=['*'])
-        # self.add_subsystem('foundation_cost', FoundationCostComponent(), promotes=['*'])
+        self.add_subsystem('foundation_cost', FoundationCostComponent(), promotes=['*'])
         self.add_subsystem('collection_cost', CollectionCostComponent(), promotes=['*'])
 
 # Calculate this input instead

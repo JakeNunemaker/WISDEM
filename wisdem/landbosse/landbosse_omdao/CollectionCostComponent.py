@@ -1,7 +1,7 @@
 import numpy as np
 
 from .LandBOSSEBaseComponent import LandBOSSEBaseComponent
-from wisdem.landbosse.model import CollectionCost
+from wisdem.landbosse.model import ArraySystem
 
 class CollectionCostComponent(LandBOSSEBaseComponent):
     """
@@ -24,6 +24,7 @@ class CollectionCostComponent(LandBOSSEBaseComponent):
 
         # Outputs, discrete, dataframes
         self.add_discrete_output('collection_cost_details', val=None)
+        self.add_discrete_output('collection_cost_module_type_operation', val=None)
 
     def compute(self, inputs, outputs, discrete_inputs=None, discrete_outputs=None):
         """
@@ -58,17 +59,18 @@ class CollectionCostComponent(LandBOSSEBaseComponent):
             pandas.DataFrame)
         """
         # Create real dictionaries to pass to the module
-        inputs_dict = {key: inputs[key][0] for key in inputs.keys()}
-        discrete_inputs_dict = {key: value for key, value in discrete_inputs.items()}
-        master_inputs_dict = {**inputs_dict, **discrete_inputs_dict}
-        master_outputs_dict = dict()
+        input_dict = {key: inputs[key][0] for key in inputs.keys()}
+        discrete_input_dict = {key: value for key, value in discrete_inputs.items()}
+        master_inputs_dict = {**input_dict, **discrete_input_dict}
+        master_output_dict = dict()
 
         # execute the module
-        module = CollectionCost(master_inputs_dict, master_outputs_dict)
-        module.run_module()
+        collection_cost = ArraySystem(input_dict=master_inputs_dict, output_dict=master_output_dict,
+                                      project_name='WISDEM')
+        collection_cost.run_module()
 
         # Print verbose outputs if needed
         if self.options['verbosity']:
             self.print_verbose_module_type_operation(type(self).__name__,
-                                                     master_outputs_dict['collection_cost_module_type_operation'])
-            self.print_verbose_details(type(self).__name__, master_outputs_dict['collection_cost_csv'])
+                                                     master_output_dict['collection_cost_module_type_operation'])
+            self.print_verbose_details(type(self).__name__, master_output_dict['collection_cost_csv'])
