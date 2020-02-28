@@ -81,7 +81,6 @@ class LandBOSSEGroup(om.Group):
         indeps.add_output('road_width_ft', units='ft', desc='Road width (ft)', val=20)
 
         # Can't add units
-        # indeps.add_output('road_thickness', units='in', desc='Road thickness (in)', val=8)
         indeps.add_output('road_thickness', desc='Road thickness (in)', val=8)
 
         indeps.add_output('crane_width', units='m', desc='Crane width (m)', val=12.2)
@@ -139,7 +138,7 @@ class LandBOSSEGroup(om.Group):
         self.add_subsystem('management_cost', ManagementCostComponent(), promotes=['*'])
         self.add_subsystem('erection_cost', ErectionCostComopnent(), promotes=['*'])
         self.add_subsystem('foundation_cost', FoundationCostComponent(), promotes=['*'])
-        self.add_subsystem('collection_cost', CollectionCostComponent(), promotes=['*'])
+        # self.add_subsystem('collection_cost', CollectionCostComponent(), promotes=['*'])
         self.add_subsystem('site_preparation_cost', SitePreparationCostComponent(), promotes=['*'])
 
 # Calculate this input instead

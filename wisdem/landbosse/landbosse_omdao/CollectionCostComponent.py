@@ -64,6 +64,9 @@ class CollectionCostComponent(LandBOSSEBaseComponent):
         master_inputs_dict = {**input_dict, **discrete_input_dict}
         master_output_dict = dict()
 
+        # Make sure cable specs are accessible
+        master_inputs_dict['cable_specs_pd'] = master_inputs_dict['cable_specs']
+
         # execute the module
         collection_cost = ArraySystem(input_dict=master_inputs_dict, output_dict=master_output_dict,
                                       project_name='WISDEM')
