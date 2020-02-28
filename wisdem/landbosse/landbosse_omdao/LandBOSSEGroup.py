@@ -5,6 +5,8 @@ from .ManagementCostComponent import ManagementCostComponent
 from .ErectionCostComponent import ErectionCostComopnent
 from .FoundationCostComponent import FoundationCostComponent
 from .CollectionCostComponent import CollectionCostComponent
+from .SitePreparationComponent import SitePreparationCostComponent
+
 
 class LandBOSSEGroup(om.Group):
     def initialize(self):
@@ -74,7 +76,6 @@ class LandBOSSEGroup(om.Group):
 
         indeps.add_output('new_switchyard', desc='New Switchyard (True or False)', val=True)
 
-
         indeps.add_output('critical_speed_non_erection_wind_delays_m_per_s', units='m/s', desc='Non-Erection Wind Delay Critical Speed (m/s)', val=15)
         indeps.add_output('critical_height_non_erection_wind_delays_m', units='m', desc='Non-Erection Wind Delay Critical Height (m)', val=10)
         indeps.add_output('road_width_ft', units='ft', desc='Road width (ft)', val=20)
@@ -135,10 +136,11 @@ class LandBOSSEGroup(om.Group):
             val=None
         )
 
-        # self.add_subsystem('management_cost', ManagementCostComponent(), promotes=['*'])
-        # self.add_subsystem('erection_cost', ErectionCostComopnent(), promotes=['*'])
+        self.add_subsystem('management_cost', ManagementCostComponent(), promotes=['*'])
+        self.add_subsystem('erection_cost', ErectionCostComopnent(), promotes=['*'])
         self.add_subsystem('foundation_cost', FoundationCostComponent(), promotes=['*'])
         self.add_subsystem('collection_cost', CollectionCostComponent(), promotes=['*'])
+        self.add_subsystem('site_preparation_cost', SitePreparationCostComponent(), promotes=['*'])
 
 # Calculate this input instead
 # self.add_input('project_size_megawatts', units='MW', desc='(Number of turbines) * (Turbine rating MW)', value=)
