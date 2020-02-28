@@ -340,6 +340,8 @@ class InputWriter_OpenFAST(InputWriter_Common):
             self.write_SubDyn()
         if self.fst_vt['Fst']['CompMooring'] == 1:
             self.write_MAP()
+        elif self.fst_vt['Fst']['CompMooring'] == 3:
+            self.write_MoorDyn()
 
         if self.fst_vt['Fst']['CompElast'] == 2:
             self.write_BeamDyn()
@@ -1242,6 +1244,7 @@ class InputWriter_OpenFAST(InputWriter_Common):
         f.write('{:<22d} {:<11} {:}'.format(self.fst_vt['DISCON_in']['PS_Mode'], '! PS_Mode', '- Peak shaving mode {0: no peak shaving, 1: implement peak shaving}\n'))
         f.write('{:<22d} {:<11} {:}'.format(self.fst_vt['DISCON_in']['SD_Mode'], '! SD_Mode', '- Shutdown mode {0: no shutdown procedure, 1: pitch to max pitch at shutdown}\n'))
         f.write('{:<22d} {:<11} {:}'.format(self.fst_vt['DISCON_in']['Fl_Mode'], '! Fl_Mode', '- Floating specific feedback mode {0: no nacelle velocity feedback, 1: nacelle velocity feedback}\n'))
+        f.write('{:<22d} {:<11} {:}'.format(self.fst_vt['DISCON_in']['Flp_Mode'], '! Flp_Mode', '- Flap control mode {0: no flap control, 1: steady state flap angle, 2: Proportional flap control}\n'))
         f.write('\n!------- FILTERS ----------------------------------------------------------\n')
         f.write('{:<22} {:<11} {:}'.format(self.fst_vt['DISCON_in']['F_LPFCornerFreq'], '! F_LPFCornerFreq', '- Corner frequency (-3dB point) in the low-pass filters, [rad/s]\n'))
         f.write('{:<22} {:<11} {:}'.format(self.fst_vt['DISCON_in']['F_LPFDamping'], '! F_LPFDamping', '- Damping coefficient [used only when F_FilterType = 2]\n'))
@@ -1249,6 +1252,7 @@ class InputWriter_OpenFAST(InputWriter_Common):
         f.write('{:<22} {:<11} {:}'.format(' '.join(['{: 2.14e}'.format(val) for val in self.fst_vt['DISCON_in']['F_NotchBetaNumDen']]), '! F_NotchBetaNumDen', '- Two notch damping values (numerator and denominator, resp) - determines the width and depth of the notch, [-]\n'))
         f.write('{:<22} {:<11} {:}'.format(self.fst_vt['DISCON_in']['F_SSCornerFreq'], '! F_SSCornerFreq', '- Corner frequency (-3dB point) in the first order low pass filter for the setpoint smoother, [rad/s].\n'))
         f.write('{:<22} {:<11} {:}'.format(' '.join(['{: 2.14e}'.format(val) for val in self.fst_vt['DISCON_in']['F_FlCornerFreq']]), '! F_FlCornerFreq', '- Corner frequency and damping in the second order low pass filter of the tower-top fore-aft motion for floating feedback control [rad/s, -]\n'))
+        f.write('{:<22} {:<11} {:}'.format(' '.join(['{: 2.14e}'.format(val) for val in self.fst_vt['DISCON_in']['F_FlpCornerFreq']]), '! F_FlpCornerFreq', '- Flap control mode {0: no flap control, 1: steady state flap angle, 2: Proportional flap control}\n'))
         f.write('\n!------- BLADE PITCH CONTROL ----------------------------------------------\n')
         f.write('{:<22d} {:<11} {:}'.format(self.fst_vt['DISCON_in']['PC_GS_n'], '! PC_GS_n', '- Amount of gain-scheduling table entries\n'))
         f.write('{:<22} {:<11} {:}'.format(' '.join(['{: 2.14e}'.format(val) for val in self.fst_vt['DISCON_in']['PC_GS_angles']]), '! PC_GS_angles', '- Gain-schedule table: pitch angles\n'))
@@ -1263,9 +1267,9 @@ class InputWriter_OpenFAST(InputWriter_Common):
         f.write('{:<22} {:<11} {:}'.format(self.fst_vt['DISCON_in']['PC_RefSpd'], '! PC_RefSpd', '- Desired (reference) HSS speed for pitch controller, [rad/s].\n'))
         f.write('{:<22} {:<11} {:}'.format(self.fst_vt['DISCON_in']['PC_FinePit'], '! PC_FinePit', '- Record 5: Below-rated pitch angle set-point, [rad]\n'))
         f.write('{:<22} {:<11} {:}'.format(self.fst_vt['DISCON_in']['PC_Switch'], '! PC_Switch', '- Angle above lowest minimum pitch angle for switch, [rad]\n'))
-        f.write('{:<22d} {:<11} {:}'.format(self.fst_vt['DISCON_in']['Z_EnableSine'], '! Z_EnableSine', '- Enable/disable sine pitch excitation, used to validate for dynamic induction control, will be removed later, [-]\n'))
-        f.write('{:<22} {:<11} {:}'.format(self.fst_vt['DISCON_in']['Z_PitchAmplitude'], '! Z_PitchAmplitude', '- Amplitude of sine pitch excitation, [rad]\n'))
-        f.write('{:<22} {:<11} {:}'.format(self.fst_vt['DISCON_in']['Z_PitchFrequency'], '! Z_PitchFrequency', '- Frequency of sine pitch excitation, [rad/s]\n'))
+        #f.write('{:<22d} {:<11} {:}'.format(self.fst_vt['DISCON_in']['Z_EnableSine'], '! Z_EnableSine', '- Enable/disable sine pitch excitation, used to validate for dynamic induction control, will be removed later, [-]\n'))
+        #f.write('{:<22} {:<11} {:}'.format(self.fst_vt['DISCON_in']['Z_PitchAmplitude'], '! Z_PitchAmplitude', '- Amplitude of sine pitch excitation, [rad]\n'))
+        #f.write('{:<22} {:<11} {:}'.format(self.fst_vt['DISCON_in']['Z_PitchFrequency'], '! Z_PitchFrequency', '- Frequency of sine pitch excitation, [rad/s]\n'))
         f.write('\n!------- INDIVIDUAL PITCH CONTROL -----------------------------------------\n')
         f.write('{:<22} {:<11} {:}'.format(self.fst_vt['DISCON_in']['IPC_IntSat'], '! IPC_IntSat', '- Integrator saturation (maximum signal amplitude contribution to pitch from IPC), [rad]\n'))
         f.write('{:<22} {:<11} {:}'.format(' '.join(['{: 2.14e}'.format(val) for val in self.fst_vt['DISCON_in']['IPC_KI']]), '! IPC_KI', '- Integral gain for the individual pitch controller: first parameter for 1P reductions, second for 2P reductions, [-]\n'))
@@ -1327,6 +1331,11 @@ class InputWriter_OpenFAST(InputWriter_Common):
         f.write('{:<22} {:<11} {:}'.format(self.fst_vt['DISCON_in']['SD_CornerFreq'], '! SD_CornerFreq', '- Cutoff Frequency for first order low-pass filter for blade pitch angle, [rad/s]\n'))
         f.write('\n!------- Floating -------------------------------------------\n')
         f.write('{:<22} {:<11} {:}'.format(self.fst_vt['DISCON_in']['Fl_Kp'], '! Fl_Kp', '- Nacelle velocity proportional feedback gain [s]\n'))
+        f.write('\n!------- FLAP ACTUATION -----------------------------------------------------\n')
+        f.write('{:<22} {:<11} {:}'.format(self.fst_vt['DISCON_in']['Flp_Angle'], '! Flp_Angle', '- Initial or steady state flap angle [rad]\n'))
+        f.write('{:<22} {:<11} {:}'.format(self.fst_vt['DISCON_in']['Flp_Kp'], '! Flp_Kp', '- Blade root bending moment proportional gain for flap control [s]\n'))
+        f.write('{:<22} {:<11} {:}'.format(self.fst_vt['DISCON_in']['Flp_Ki'], '! Flp_Ki', '- Flap displacement integral gain for flap control [s]\n'))
+        f.write('{:<22} {:<11} {:}'.format(self.fst_vt['DISCON_in']['Flp_MaxPit'], '! Flp_MaxPit', '- Maximum (and minimum) flap pitch angle [rad]\n'))
 
         f.close()
 
@@ -1801,9 +1810,81 @@ class InputWriter_OpenFAST(InputWriter_Common):
 
         f.close()
 
-        # f.write('{:<22} {:<11} {:}'.format(self.fst_vt['MAP'][''], '', '- \n'))
-        # f.write('\n')
-        
+    def write_MoorDyn(self):
+
+        self.fst_vt['Fst']['MooringFile'] = self.FAST_namingOut + '_MoorDyn.dat'
+        moordyn_file = os.path.join(self.FAST_runDirectory, self.fst_vt['Fst']['MooringFile'])
+        f = open(moordyn_file, 'w')
+
+        f.write('--------------------- MoorDyn Input File ------------------------------------\n')
+        f.write('Generated with AeroElasticSE FAST driver\n')
+        f.write('{!s:<22} {:<11} {:}'.format(self.fst_vt['MoorDyn']['Echo'], 'Echo', '- echo the input file data (flag)\n'))
+        f.write('----------------------- LINE TYPES ------------------------------------------\n')
+        f.write('{:<22d} {:<11} {:}'.format(self.fst_vt['MoorDyn']['NTypes'], 'NTypes', '- number of LineTypes\n'))
+        f.write(" ".join(['{:^11s}'.format(i) for i in ['Name', 'Diam', 'MassDen', 'EA', 'BA/-zeta', 'Can', 'Cat', 'Cdn', 'Cdt']])+'\n')
+        f.write(" ".join(['{:^11s}'.format(i) for i in ['(-)', '(m)', '(kg/m)', '(N)', '(N-s/-)', '(-)', '(-)', '(-)', '(-)']])+'\n')
+        for i in range(self.fst_vt['MoorDyn']['NTypes']):
+            ln = []
+            ln.append('{:^11}'.format(self.fst_vt['MoorDyn']['Name'][i]))
+            ln.append('{:^11}'.format(self.fst_vt['MoorDyn']['Diam'][i]))
+            ln.append('{:^11}'.format(self.fst_vt['MoorDyn']['MassDen'][i]))
+            ln.append('{:^11}'.format(self.fst_vt['MoorDyn']['EA'][i]))
+            ln.append('{:^11}'.format(self.fst_vt['MoorDyn']['BA_zeta'][i]))
+            ln.append('{:^11}'.format(self.fst_vt['MoorDyn']['Can'][i]))
+            ln.append('{:^11}'.format(self.fst_vt['MoorDyn']['Cat'][i]))
+            ln.append('{:^11}'.format(self.fst_vt['MoorDyn']['Cdn'][i]))
+            ln.append('{:^11}'.format(self.fst_vt['MoorDyn']['Cdt'][i]))
+            f.write(" ".join(ln) + '\n')
+        f.write('---------------------- CONNECTION PROPERTIES --------------------------------\n')
+        f.write('{:<22d} {:<11} {:}'.format(self.fst_vt['MoorDyn']['NConnects'], 'NConnects', '- number of connections including anchors and fairleads\n'))
+        f.write(" ".join(['{:^11s}'.format(i) for i in ['Node', 'Type', 'X', 'Y', 'Z', 'M', 'V', 'FX', 'FY', 'FZ', 'CdA', 'CA']])+'\n')
+        f.write(" ".join(['{:^11s}'.format(i) for i in ['(-)', '(-)', '(m)', '(m)', '(m)', '(kg)', '(m^3)', '(kN)', '(kN)', '(kN)', '(m^2)', '(-)']])+'\n')
+        for i in range(self.fst_vt['MoorDyn']['NConnects']):
+            ln = []
+            ln.append('{:^11d}'.format(self.fst_vt['MoorDyn']['Node'][i]))
+            ln.append('{:^11}'.format(self.fst_vt['MoorDyn']['Type'][i]))
+            ln.append('{:^11}'.format(self.fst_vt['MoorDyn']['X'][i]))
+            ln.append('{:^11}'.format(self.fst_vt['MoorDyn']['Y'][i]))
+            ln.append('{:^11}'.format(self.fst_vt['MoorDyn']['Z'][i]))
+            ln.append('{:^11}'.format(self.fst_vt['MoorDyn']['M'][i]))
+            ln.append('{:^11}'.format(self.fst_vt['MoorDyn']['V'][i]))
+            ln.append('{:^11}'.format(self.fst_vt['MoorDyn']['FX'][i]))
+            ln.append('{:^11}'.format(self.fst_vt['MoorDyn']['FY'][i]))
+            ln.append('{:^11}'.format(self.fst_vt['MoorDyn']['FZ'][i]))
+            ln.append('{:^11}'.format(self.fst_vt['MoorDyn']['CdA'][i]))
+            ln.append('{:^11}'.format(self.fst_vt['MoorDyn']['CA'][i]))
+            f.write(" ".join(ln) + '\n')
+        f.write('---------------------- LINE PROPERTIES --------------------------------------\n')
+        f.write('{:<22d} {:<11} {:}'.format(self.fst_vt['MoorDyn']['NLines'], 'NLines', '- number of line objects\n'))
+        f.write(" ".join(['{:^11s}'.format(i) for i in ['Line', 'LineType', 'UnstrLen', 'NumSegs', 'NodeAnch', 'NodeFair', 'Flags/Outputs']])+'\n')
+        f.write(" ".join(['{:^11s}'.format(i) for i in ['(-)', '(-)', '(m)', '(-)', '(-)', '(-)', '(-)']])+'\n')
+        for i in range(self.fst_vt['MoorDyn']['NLines']):
+            ln = []
+            ln.append('{:^11d}'.format(self.fst_vt['MoorDyn']['Line'][i]))
+            ln.append('{:^11}'.format(self.fst_vt['MoorDyn']['LineType'][i]))
+            ln.append('{:^11}'.format(self.fst_vt['MoorDyn']['UnstrLen'][i]))
+            ln.append('{:^11d}'.format(self.fst_vt['MoorDyn']['NumSegs'][i]))
+            ln.append('{:^11d}'.format(self.fst_vt['MoorDyn']['NodeAnch'][i]))
+            ln.append('{:^11d}'.format(self.fst_vt['MoorDyn']['NodeFair'][i]))
+            ln.append('{:^11}'.format(self.fst_vt['MoorDyn']['Flags_Outputs'][i]))
+            f.write(" ".join(ln) + '\n')
+        f.write('---------------------- SOLVER OPTIONS ---------------------------------------\n')
+        f.write('{:<22} {:<11} {:}'.format(self.fst_vt['MoorDyn']['dtM'], 'dtM', '- time step to use in mooring integration (s)\n'))
+        f.write('{:<22} {:<11} {:}'.format(self.fst_vt['MoorDyn']['kbot'], 'kbot', '- bottom stiffness (Pa/m)\n'))
+        f.write('{:<22} {:<11} {:}'.format(self.fst_vt['MoorDyn']['cbot'], 'cbot', '- bottom damping (Pa-s/m)\n'))
+        f.write('{:<22} {:<11} {:}'.format(self.fst_vt['MoorDyn']['dtIC'], 'dtIC', '- time interval for analyzing convergence during IC gen (s)\n'))
+        f.write('{:<22} {:<11} {:}'.format(self.fst_vt['MoorDyn']['TmaxIC'], 'TmaxIC', '- max time for ic gen (s)\n'))
+        f.write('{:<22} {:<11} {:}'.format(self.fst_vt['MoorDyn']['CdScaleIC'], 'CdScaleIC', '- factor by which to scale drag coefficients during dynamic relaxation (-)\n'))
+        f.write('{:<22} {:<11} {:}'.format(self.fst_vt['MoorDyn']['threshIC'], 'threshIC', '- threshold for IC convergence (-)\n'))
+        f.write('------------------------ OUTPUTS --------------------------------------------\n')
+        outlist = self.get_outlist(self.fst_vt['outlist'], ['MoorDyn'])
+        for channel_list in outlist:
+            for i in range(len(channel_list)):
+                f.write('"' + channel_list[i] + '"\n')
+        f.write('END\n')
+        f.write('------------------------- need this line --------------------------------------\n')
+
+        f.close()
 
 class InputWriter_FAST7(InputWriter_Common):
 
