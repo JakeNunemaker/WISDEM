@@ -24,6 +24,7 @@ from .common import (
     upend_monopile,
     install_monopile,
     install_transition_piece,
+    install_secondary_steel
 )
 
 
@@ -57,7 +58,7 @@ class MonopileInstallation(InstallPhase):
             "deck_space": "m2",
             "mass": "t",
         },
-        "transition_piece": {"deck_space": "m2", "mass": "t"},
+        "transition_piece": {"deck_space": "m2 (optional)", "mass": "t (optional)"},
     }
 
     def __init__(self, config, weather=None, **kwargs):
@@ -191,12 +192,12 @@ class MonopileInstallation(InstallPhase):
         """
 
         monopile = Monopile(**self.config["monopile"])
-        tp = TransitionPiece(**self.config["transition_piece"])
+        # tp = TransitionPiece(**self.config["transition_piece"])
         self.num_monopiles = self.config["plant"]["num_turbines"]
 
         for _ in range(self.num_monopiles):
             self.port.put(monopile)
-            self.port.put(tp)
+            # self.port.put(tp)
 
     def initialize_queue(self):
         """
@@ -247,13 +248,12 @@ def solo_install_monopiles(vessel, port, distance, monopiles, **kwargs):
         Total monopiles to install.
     """
 
-    component_list = ["Monopile", "TransitionPiece"]
+    component_list = ["Monopile"]
 
     n = 0
     while n < monopiles:
         if vessel.at_port:
             try:
-                # Get substructure + transition piece from port
                 yield get_list_of_items_from_port(
                     vessel, port, component_list, **kwargs
                 )
@@ -286,15 +286,9 @@ def solo_install_monopiles(vessel, port, distance, monopiles, **kwargs):
                     "Monopile", **kwargs
                 )
 
-                yield upend_monopile(vessel, monopile.length, **kwargs)
+                # Install monopile and secondary steel
                 yield install_monopile(vessel, monopile, **kwargs)
-
-                # Get transition piece from internal storage
-                tp = yield vessel.get_item_from_storage(
-                    "TransitionPiece", **kwargs
-                )
-
-                yield install_transition_piece(vessel, tp, **kwargs)
+                yield install_secondary_steel(vessel, **kwargs)
 
                 n += 1
 

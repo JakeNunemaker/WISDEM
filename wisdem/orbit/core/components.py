@@ -148,26 +148,28 @@ class JackingSys:
             Time required to jack-up to given extension (h).
         """
 
-        if extension > self.max_extension:
-            raise Exception(
-                "{} extension is greater than {} maximum"
-                "".format(extension, self.max_extension)
-            )
+        # if extension > self.max_extension:
+        #     raise Exception(
+        #         "{} extension is greater than {} maximum"
+        #         "".format(extension, self.max_extension)
+        #     )
 
-        elif depth > self.max_depth:
-            raise Exception(
-                "{} is beyond the operating depth {}"
-                "".format(depth, self.max_depth)
-            )
+        # elif depth > self.max_depth:
+        #     raise Exception(
+        #         "{} is beyond the operating depth {}"
+        #         "".format(depth, self.max_depth)
+        #     )
 
-        elif depth > extension:
-            raise Exception("Extension must be greater than depth")
+        # elif depth > extension:
+        #     raise Exception("Extension must be greater than depth")
 
-        else:
-            return (
-                depth / self.speed_below_depth
-                + (extension - depth) / self.speed_above_depth
-            ) / 60
+        # else:
+        #     return (
+        #         depth / self.speed_below_depth
+        #         + (extension - depth) / self.speed_above_depth
+        #     ) / 60
+
+        return 3.5
 
 
 class VesselStorage(simpy.FilterStore):

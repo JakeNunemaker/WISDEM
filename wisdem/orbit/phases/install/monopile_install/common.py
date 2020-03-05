@@ -6,7 +6,7 @@ __maintainer__ = "Jake Nunemaker"
 __email__ = "jake.nunemaker@nrel.gov"
 
 
-from marmot import process
+from marmot import process, le
 
 from wisdem.orbit.core import Cargo
 from wisdem.orbit.core._defaults import process_times as pt
@@ -74,6 +74,17 @@ class TransitionPiece(Cargo):
         time = kwargs.get(key, pt[key])
 
         return "Release Transition Piece", time
+
+
+@process
+def install_secondary_steel(vessel, **kwargs):
+    """
+    TODO:
+    """
+
+    yield vessel.task(
+        "Install Secondary Steel", 7, constraints={"windspeed": le(16)}
+    )
 
 
 @process
@@ -284,16 +295,18 @@ def install_monopile(vessel, monopile, **kwargs):
     monopile : dict
     """
 
-    reequip_time = vessel.crane.reequip(**kwargs)
+    # reequip_time = vessel.crane.reequip(**kwargs)
 
-    yield lower_monopile(vessel, **kwargs)
-    yield vessel.task(
-        "Crane Reequip",
-        reequip_time,
-        constraints=vessel.transit_limits,
-        **kwargs,
-    )
-    yield drive_monopile(vessel, **kwargs)
+    # yield lower_monopile(vessel, **kwargs)
+    # yield vessel.task(
+    #     "Crane Reequip",
+    #     reequip_time,
+    #     constraints=vessel.transit_limits,
+    #     **kwargs,
+    # )
+    # yield drive_monopile(vessel, **kwargs)
+
+    yield vessel.task("Install Monopile", 8, constraints=vessel.operational_limits)
 
 
 @process

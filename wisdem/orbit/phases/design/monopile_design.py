@@ -25,6 +25,7 @@ class MonopileDesign(DesignPhase):
             "rated_windspeed": "m/s",
         },
         "monopile_design": {
+            "transition_piece": "bool (optional)",
             "yield_stress": "Pa (optional)",
             "load_factor": "float (optional)",
             "material_factor": "float (optional)",
@@ -89,11 +90,13 @@ class MonopileDesign(DesignPhase):
             **_kwargs,
         )
 
-        self._outputs["transition_piece"] = self.design_transition_piece(
-            self.monopile_sizing["diameter"],
-            self.monopile_sizing["thickness"],
-            **_kwargs,
-        )
+        if _kwargs.get("transition_piece"):
+            self._outputs["transition_piece"] = self.design_transition_piece(
+                self.monopile_sizing["diameter"],
+                self.monopile_sizing["thickness"],
+                **_kwargs,
+            )
+
 
     def design_monopile(
         self,
@@ -181,7 +184,7 @@ class MonopileDesign(DesignPhase):
         )
 
         # Deck space
-        sizing["deck_space"] = sizing["diameter"] ** 2
+        sizing["deck_space"] = sizing["diameter"] * sizing["length"] * 2
 
         self.monopile_sizing = sizing
 
@@ -264,10 +267,10 @@ class MonopileDesign(DesignPhase):
         _outputs = {
             "total_monopile_mass": self.total_monopile_mass,
             "total_monopile_cost": self.material_cost["monopile"],
-            "total_transition_piece_mass": self.total_tp_mass,
-            "total_transition_piece_cost": self.material_cost[
-                "transition_piece"
-            ],
+            # "total_transition_piece_mass": self.total_tp_mass,
+            # "total_transition_piece_cost": self.material_cost[
+            #     "transition_piece"
+            # ],
         }
 
         return _outputs
@@ -281,7 +284,7 @@ class MonopileDesign(DesignPhase):
 
         out = {
             "monopile": self.total_monopile_mass * self.monopile_steel_cost,
-            "transition_piece": self.total_tp_mass * self.tp_steel_cost,
+            # "transition_piece": self.total_tp_mass * self.tp_steel_cost,
         }
 
         return out
