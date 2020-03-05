@@ -161,6 +161,7 @@ class MonopileTurbine(om.Group):
                                                        'port_cost_per_month',
                                                        'monopile_deck_space',
                                                        'transition_piece_deck_space',
+                                                       'scour_protection_depth',
                                                        'commissioning_pct',
                                                        'decommissioning_pct'])
         

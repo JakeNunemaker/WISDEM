@@ -155,6 +155,10 @@ class MonopileTurbine(Group):
                                                        'port_cost_per_month',
                                                        'monopile_deck_space',
                                                        'transition_piece_deck_space',
+                                                       'scour_protection_depth',
+                                                       'array_system_cables',
+                                                       'export_system_cable',
+                                                       'monopile_steel_cost',
                                                        'commissioning_pct',
                                                        'decommissioning_pct'])
         
