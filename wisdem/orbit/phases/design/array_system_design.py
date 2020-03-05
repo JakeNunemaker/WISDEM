@@ -107,6 +107,13 @@ class ArraySystemDesign(CableSystem):
         self.system = Plant(self.config)
 
     @property
+    def total_phase_cost(self):
+        """
+        """
+
+        return sum(self.cost_by_type.values()) + self.cable_connection_capex
+
+    @property
     def total_length(self):
         """Returns total array system length."""
 
@@ -119,6 +126,17 @@ class ArraySystemDesign(CableSystem):
         return sum(self.cost_by_type.values())
 
     @property
+    def cable_connection_capex(self):
+        """
+        TODO
+        """
+
+        connections = len(self.full_string) * self.num_full_strings +\
+                      len(self.partial_string) * self.num_partial_strings
+
+        return connections * 15000
+
+    @property
     def detailed_output(self):
         """Returns array system design outputs."""
 
@@ -129,6 +147,7 @@ class ArraySystemDesign(CableSystem):
             "array_system_length_by_type": self.total_cable_length_by_type,
             "array_system_total_cost": self.total_cable_cost,
             "array_system_cost_by_type": self.cost_by_type,
+            "array_system_cable_connections_capex": self.cable_connection_capex
         }
 
         return _output

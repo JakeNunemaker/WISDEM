@@ -1,0 +1,9 @@
+ac_resistance: 0.04     #
+capacitance: 300        #
+conductor_size: 800     #
+cost_per_km: 170000     #
+current_capacity: 800   #
+inductance: 0.35        #
+linear_density: 70      #
+name: AL_800mm2
+rated_voltage: 66

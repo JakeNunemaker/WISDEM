@@ -1,0 +1,9 @@
+ac_resistance: 0.128    #
+capacitance: 163        #
+conductor_size: 240     #
+cost_per_km: 120000     #
+current_capacity: 350   #
+inductance: 0.45        #
+linear_density: 25      #
+name: AL_240mm2
+rated_voltage: 66

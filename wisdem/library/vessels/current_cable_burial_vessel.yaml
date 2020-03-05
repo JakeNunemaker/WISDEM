@@ -1,0 +1,7 @@
+transport_specs:
+  max_waveheight: 2.0   # m
+  max_windspeed: 25     # m/s
+  transit_speed: 20   # km/hr
+  cable_bury_speed: .2
+vessel_specs:
+  day_rate: 40000       # USD/day, cost of operating vessel with crew

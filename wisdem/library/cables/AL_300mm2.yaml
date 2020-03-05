@@ -1,0 +1,9 @@
+ac_resistance: 0.1      #
+capacitance: 250        #
+conductor_size: 300     #
+cost_per_km: 150000     #
+current_capacity: 600   #
+inductance: 0.40       #
+linear_density: 40    #
+name: AL_300mm2
+rated_voltage: 66
