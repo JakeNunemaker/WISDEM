@@ -110,7 +110,6 @@ class OrbitWisdemFixed(om.ExplicitComponent):
         self.add_input('transition_piece_mass', 0., units='t', desc='mass of an individual transition piece.')
         self.add_input('transition_piece_deck_space', 0., units='m**2', desc='Deck space required to transport a transition piece. Defaults to 0 in order to not be a constraint on installation.')
         self.add_input('scour_protection_depth', 1.0, units='m', desc='Depth of installed scour protection material.')
-        self.add_input('monopile_steel_cost', 3000, units="USD/t", desc="Monopiole steel cost rate.")
 
         # Other
         self.add_input('commissioning_pct', 0.01, desc="Commissioning percent.")
