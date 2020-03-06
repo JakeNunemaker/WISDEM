@@ -23,6 +23,8 @@ class Orbit(om.Group):
         myIndeps.add_discrete_output('feeder', 'example_feeder')
         myIndeps.add_discrete_output('num_feeders', 0)
         myIndeps.add_discrete_output('oss_install_vessel', 'example_heavy_lift_vessel')
+        myIndeps.add_discrete_output('array_system_cables', ['XLPE_400mm_33kV', 'XLPE_630mm_33kV'])
+        myIndeps.add_discrete_output('export_system_cable', 'XLPE_1000mm_220kV')
         myIndeps.add_output('site_distance', 0.0, units='km')
         myIndeps.add_output('site_distance_to_landfall', 40.0, units='km')
         myIndeps.add_output('site_distance_to_interconnection', 40.0, units='km')
@@ -37,6 +39,8 @@ class Orbit(om.Group):
         myIndeps.add_output('transition_piece_deck_space', 0., units='m**2')
         myIndeps.add_output('commissioning_pct', 0.01)
         myIndeps.add_output('decommissioning_pct', 0.15)
+        myIndeps.add_output('scour_protection_depth', 1.0, units='m')
+        myIndeps.add_output('monopile_steel_cost', 3000., units='USD/t')
         self.add_subsystem('myIndeps', myIndeps, promotes=['*'])
 
         self.add_subsystem('orbit', OrbitWisdemFixed(), promotes=['*'])
@@ -98,6 +102,7 @@ class OrbitWisdemFixed(om.ExplicitComponent):
         self.add_input('port_cost_per_month', 2e6, units='USD/mo', desc='Monthly port costs.')
 
         # Monopile
+        self.add_input('monopile_steel_cost', 3000., units='USD/t', desc='Unit cost of steel in monopile per metric tonne')
         self.add_input('monopile_length', 100., units='m', desc='Length of monopile.')
         self.add_input('monopile_diameter', 7., units='m', desc='Diameter of monopile.')
         self.add_input('monopile_mass', 900., units='t', desc='mass of an individual monopile.')
@@ -195,6 +200,10 @@ class OrbitWisdemFixed(om.ExplicitComponent):
                 'mass': float(inputs['monopile_mass'])
             },
 
+            'monopile_design': {
+                'monopile_steel_cost': float(inputs['monopile_steel_cost'])
+            },
+            
             'transition_piece': {
                 'type': 'Transition Piece',
                 'deck_space': float(inputs['transition_piece_deck_space']),
