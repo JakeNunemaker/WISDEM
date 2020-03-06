@@ -82,8 +82,10 @@ def install_secondary_steel(vessel, **kwargs):
     TODO:
     """
 
+
+    secondary_time = kwargs.get("second_steel_install_time", pt["second_steel_install_time"])
     yield vessel.task(
-        "Install Secondary Steel", 7, constraints={"windspeed": le(16)}
+        "Install Secondary Steel", secondary_time, constraints={"windspeed": le(16)}
     )
 
 
@@ -305,8 +307,8 @@ def install_monopile(vessel, monopile, **kwargs):
     #     **kwargs,
     # )
     # yield drive_monopile(vessel, **kwargs)
-
-    yield vessel.task("Install Monopile", 8, constraints=vessel.operational_limits)
+    install_time = kwargs.get("mono_install_time", pt["mono_install_time"])
+    yield vessel.task("Install Monopile", install_time, constraints=vessel.operational_limits)
 
 
 @process

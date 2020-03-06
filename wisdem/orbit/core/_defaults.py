@@ -31,6 +31,8 @@ process_times = {
     "topside_release_time": 2,  # hr
     "topside_attach_time": 6,  # hr
     # Monopiles
+    "mono_install_time": 8,  # hr
+    "second_steel_install_time": 7,  # hr
     "mono_embed_len": 30,  # m
     "mono_drive_rate": 20,  # m/hr
     "mono_fasten_time": 8,  # hr
