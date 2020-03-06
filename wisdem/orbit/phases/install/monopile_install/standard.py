@@ -7,7 +7,7 @@ __email__ = "jake.nunemaker@nrel.gov"
 
 
 import simpy
-from marmot import process
+from marmot import process, le
 
 from wisdem.orbit.core import Vessel
 from wisdem.orbit.core.logic import (
@@ -289,6 +289,7 @@ def solo_install_monopiles(vessel, port, distance, monopiles, **kwargs):
                 # Install monopile and secondary steel
                 yield install_monopile(vessel, monopile, **kwargs)
                 yield install_secondary_steel(vessel, **kwargs)
+                yield vessel.task("Jackdown", 3.5, constraints={"waveheight": le(2.1)})
 
                 n += 1
 

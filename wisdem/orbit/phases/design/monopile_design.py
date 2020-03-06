@@ -574,8 +574,7 @@ class MonopileDesign(DesignPhase):
 
         return ct
 
-    @staticmethod
-    def calculate_50year_extreme_ws(mean_windspeed, **kwargs):
+    def calculate_50year_extreme_ws(self, mean_windspeed, **kwargs):
         """
         Calculates the 50 year extreme wind speed using methodology from DNV-GL.
         Source: Arany & Bhattacharya (2016)
@@ -595,10 +594,12 @@ class MonopileDesign(DesignPhase):
         """
 
         scale_factor = kwargs.get("weibull_scale_factor", mean_windspeed)
-        shape_factor = kwargs.get("weibull_shape_factor", 2)
+        shape_factor = kwargs.get("weibull_shape_factor", 1.75)
         U_50y = scale_factor * (-log(1 - 0.98 ** (1 / 52596))) ** (
             1 / shape_factor
         )
+        
+        self.extreme_ws = U_50y
 
         return U_50y
 
